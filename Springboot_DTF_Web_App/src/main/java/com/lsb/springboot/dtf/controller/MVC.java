@@ -2,6 +2,7 @@ package com.lsb.springboot.dtf.controller;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.lsb.springboot.dtf.records.DriveRecord;
 import com.lsb.springboot.logic.DriveList;
 
 @RestController
@@ -43,7 +45,7 @@ public class MVC
 				}
 			
 			@GetMapping("/all/drives")
-			public String ListAddedDrives()
+			public List<DriveRecord> ListAddedDrives()
 			{	
 				// gets list of drives already in the drive list and returns them as a string.
 				return driveL.PrintListOfDrives();

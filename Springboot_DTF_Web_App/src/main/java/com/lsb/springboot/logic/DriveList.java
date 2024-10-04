@@ -1,8 +1,11 @@
 package com.lsb.springboot.logic;
 
 import java.util.LinkedList;
+import java.util.List;
 
 import org.springframework.stereotype.Repository;
+
+import com.lsb.springboot.dtf.records.DriveRecord;
 
 @Repository
 public class DriveList
@@ -22,30 +25,30 @@ public class DriveList
 		System.out.println(driveName + " will start recording tomorow at " + Drive.startRecording + "\n");
 	}
 
-	public String PrintListOfDrives()
+	public List<DriveRecord> PrintListOfDrives()
 	{
+		List<DriveRecord> driveRecordList = new LinkedList<>();
 		// perfect for printing a linked list
-		StringBuilder driveLString = new StringBuilder();
+		//StringBuilder driveLString = new StringBuilder();
 		
-		if (driveList.isEmpty() == false)
-		{
+//		if (driveList.isEmpty() == false)
+//		{
 			// for each drive in drivelist do something
 			for (Drive drive : driveList)
-			{
-				driveLString.append(drive.name).append(", ");
-			}
+				{
+				driveRecordList.add(new DriveRecord(drive.driveName, drive.f, drive.PrintEstDaysTillFull()));
+				//driveLString.append(drive.driveName).append(", ");
+				}
 			
-			return driveLString.toString();
-		}
-			
-		else 
-		{
-			return "There are no drives added to the list yet.\n";
-
-		}
-			
-		
+			return driveRecordList;
 	}
+			
+//		else 
+//		{
+//			return "There are no drives added to the list yet.\n";
+//
+//		}
+			
 	
 	public void deleteDrive(String name)
 	{

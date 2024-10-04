@@ -10,7 +10,7 @@ import java.util.stream.LongStream;
 
 public class Drive
 	{
-		String  name; // name of the drive object
+		String  driveName; // name of the drive object
 		String units; // holds the suffix for units i.e GiB MiB etc
 		//long totalStorage; // Holds Value of total storage in GiB
 		//long usableSpace; // Holds Value of total usable space in GiB
@@ -105,12 +105,12 @@ public Drive()
 
 public String GetName()
 {
-	return name;
+	return driveName;
 }
 
 public void AddName(String name)
 {
-	this.name = name;
+	this.driveName = name;
 }
 
 public void AddFilePath(String filePath)
@@ -156,11 +156,11 @@ public void InsertIntoSnapshotArr(Date currTime, int i)
 		// checks if a 12am snap has been over written due to not being cleared as result of missing a 11:59pm snapshot
 		else
 		{						
-			System.out.println(name + " PM snapshot was missed. Record was not added to estimates.");
+			System.out.println(driveName + " PM snapshot was missed. Record was not added to estimates.");
 			schedSnap1 = true;
 		}
 		
-		System.out.println(name + " AM snapshot has been taken at: " + currTime + " "
+		System.out.println(driveName + " AM snapshot has been taken at: " + currTime + " "
 				+ /* decfor.format(FileSizeUnitsConverter(GetUsableSpace())) + " " + units + */ ".\n");
 	}
 	
@@ -172,7 +172,7 @@ public void InsertIntoSnapshotArr(Date currTime, int i)
 		{
 			snapshotArr[i] = GetUsableSpace();
 			
-			System.out.println(name + " PM snapshot has been taken at: " + currTime + " "
+			System.out.println(driveName + " PM snapshot has been taken at: " + currTime + " "
 					+ /* decfor.format(FileSizeUnitsConverter(GetUsableSpace())) + " " + units + */ ".\n");
 			InsertIntoDailyUsageMeanArr(snapshotArr);
 			schedSnap1 = false;
@@ -180,7 +180,7 @@ public void InsertIntoSnapshotArr(Date currTime, int i)
 		
 		else
 		{
-			System.out.println(name + " PM snapshot skipped. AM snapshot is missing. Record not added to estimates");
+			System.out.println(driveName + " PM snapshot skipped. AM snapshot is missing. Record not added to estimates");
 		}
 	
 	}
@@ -222,13 +222,13 @@ public void InsertIntoDailyUsageMeanArr(long[] snapshotArr)
 		else if (snapshotArr[0] < snapshotArr[1])
 		{
 			long usableSpaceIncrease = snapshotArr[1] - snapshotArr[0];
-			System.out.println("Today "+ name +" usable space has increased by: " + decfor.format(FileSizeUnitsConverter(usableSpaceIncrease)) +" "+ units +". Snap Shot has not been added to estimate.\n");
+			System.out.println("Today "+ driveName +" usable space has increased by: " + decfor.format(FileSizeUnitsConverter(usableSpaceIncrease)) +" "+ units +". Snap Shot has not been added to estimate.\n");
 			return;
 		}
 		
 		else if (snapshotArr[0] == snapshotArr[1])
 		{
-			System.out.println("Today "+ name +" usable space has not changed. Snap Shot has not been added to estimate.\n");
+			System.out.println("Today "+ driveName +" usable space has not changed. Snap Shot has not been added to estimate.\n");
 			return;
 		}
 }
@@ -270,7 +270,7 @@ public void PrintDailyUsageMeanArray()
 
 // Prints estimate of days till full
 @SuppressWarnings("deprecation")
-public void PrintEstDaysTillFull()
+public String PrintEstDaysTillFull()
 {
 	Date estimatedDate = new java.util.Date();
 	
@@ -278,16 +278,16 @@ public void PrintEstDaysTillFull()
 	{
 		estimatedDate.setDate(estimatedDate.getDate() + GetDaysTillFull());
 	
-		System.out.println("Collected " + dailyUsageArrayCountOfStoredValues + " day(s) of data. Average usage: "
+		return "Collected " + dailyUsageArrayCountOfStoredValues + " day(s) of data. Average usage: "
 				+ decfor.format(FileSizeUnitsConverter(GetAverageUsagePerDay()))  
 				+ " " + units + " per day. Total usable space: "
 				+ decfor.format(FileSizeUnitsConverter(GetUsableSpace())) + " " + units + ". Estimated "
-				+ GetDaysTillFull() + " days till " + name + " becomes full: " + estimatedDate + "\n");
+				+ GetDaysTillFull() + " days till " + driveName + " becomes full: " + estimatedDate + ".";
 	}
 	
 	else
 	{
-		System.out.println(GetName() + " does not have enough data to track so far.\n");
+		return GetName() + " does not have enough data to track so far.";
 	}
 }
 
@@ -301,7 +301,7 @@ public void PrintAverageUsagePerDay()
 public void PrintName()
 {
 	System.out.println("");
-	System.out.println(name);
+	System.out.println(driveName);
 }
 
 public double FileSizeUnitsConverter(long size)
