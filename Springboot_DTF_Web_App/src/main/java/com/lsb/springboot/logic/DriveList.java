@@ -36,8 +36,8 @@ public class DriveList
 			// for each drive in drivelist do something
 			for (Drive drive : driveList)
 				{
-				driveRecordList.add(new DriveRecord(drive.driveName, drive.f, drive.PrintEstDaysTillFull()));
-				//driveLString.append(drive.driveName).append(", ");
+					driveRecordList.add(new DriveRecord(drive.driveName, drive.f, drive.PrintEstDaysTillFull()));
+					//driveLString.append(drive.driveName).append(", ");
 				}
 			
 			return driveRecordList;

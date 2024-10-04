@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.lsb.springboot.dtf.records.DriveRecord;
 import com.lsb.springboot.logic.DriveList;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/dtf")
 public class MVC
@@ -53,7 +55,7 @@ public class MVC
 			
 			@ResponseStatus(HttpStatus.CREATED)
 			@PostMapping("/{selectedDrive}/{nameInput}")
-			public void AddDrive(@PathVariable int selectedDrive, @PathVariable String nameInput)
+			public void AddDrive(@Valid @PathVariable int selectedDrive, @Valid @PathVariable String nameInput)
 				{
 					
 									int driveNumber = selectedDrive;
