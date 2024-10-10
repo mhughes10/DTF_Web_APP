@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,7 +19,7 @@ import com.lsb.springboot.logic.DriveList;
 
 import jakarta.validation.Valid;
 
-@RestController
+@Controller
 @RequestMapping("/dtf")
 public class MVC
 	{
@@ -40,17 +42,19 @@ public class MVC
 				return paths[selectedDrive].toString();
 			}
 			
+			// gets a list of all drive paths on the host computer
 			@GetMapping("/availiable/drives/paths")
 			public String ListDrivePaths()
 				{	// gets list of drive paths and returns them as a string.			
 					return Arrays.toString(File.listRoots());
 				}
 			
+			// gets a list of all drives currently added to the list along with relevant info
 			@GetMapping("/all/drives")
-			public List<DriveRecord> ListAddedDrives()
+			public String ListAddedDrives(Model model)
 			{	
-				// gets list of drives already in the drive list and returns them as a string.
-				return driveL.PrintListOfDrives();
+				model.addAttribute("addedDrives",driveL.PrintListOfDrives());
+				return "page";
 			}
 			
 			@ResponseStatus(HttpStatus.CREATED)
