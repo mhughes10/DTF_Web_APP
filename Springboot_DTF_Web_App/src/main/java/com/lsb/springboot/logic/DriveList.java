@@ -31,8 +31,8 @@ public class DriveList
 		// perfect for printing a linked list
 		//StringBuilder driveLString = new StringBuilder();
 		
-//		if (driveList.isEmpty() == false)
-//		{
+		if (driveList.isEmpty() == false)
+		{
 			// for each drive in drivelist do something
 			for (Drive drive : driveList)
 				{
@@ -43,12 +43,13 @@ public class DriveList
 			return driveRecordList;
 	}
 			
-//		else 
-//		{
-//			return "There are no drives added to the list yet.\n";
-//
-//		}
+		else 
+		{
+			return null;
+
+		}
 			
+	}
 	
 	public void deleteDrive(String name)
 	{

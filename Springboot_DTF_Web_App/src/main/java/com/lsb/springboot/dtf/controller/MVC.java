@@ -18,6 +18,7 @@ import com.lsb.springboot.dtf.records.DriveRecord;
 import com.lsb.springboot.logic.DriveList;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 
 @Controller
 @RequestMapping("/dtf")
@@ -44,9 +45,10 @@ public class MVC
 			
 			// gets a list of all drive paths on the host computer
 			@GetMapping("/availiable/drives/paths")
-			public String ListDrivePaths()
-				{	// gets list of drive paths and returns them as a string.			
-					return Arrays.toString(File.listRoots());
+			public String ListDrivePaths(Model model)
+				{	// gets list of drive paths and returns them as a string.	
+					model.addAttribute("availiableDrives", Arrays.toString(File.listRoots()));
+					return "page";
 				}
 			
 			// gets a list of all drives currently added to the list along with relevant info
@@ -58,7 +60,7 @@ public class MVC
 			}
 			
 			@ResponseStatus(HttpStatus.CREATED)
-			@PostMapping("/{selectedDrive}/{nameInput}")
+			@GetMapping("/{selectedDrive}/{nameInput}")
 			public void AddDrive(@Valid @PathVariable int selectedDrive, @Valid @PathVariable String nameInput)
 				{
 					
