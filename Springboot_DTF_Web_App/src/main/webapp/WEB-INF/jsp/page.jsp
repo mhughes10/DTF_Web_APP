@@ -6,9 +6,8 @@
 <meta charset="UTF-8">
 <title>DTF</title>
 </head>
+<body>
 	<h2>${availiableDrives}</h2>
 	<h3>${addedDrives}</h3>
-<body>
-
 </body>
 </html>
