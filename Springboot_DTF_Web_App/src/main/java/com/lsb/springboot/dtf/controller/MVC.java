@@ -1,6 +1,7 @@
 package com.lsb.springboot.dtf.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -21,6 +22,7 @@ import com.lsb.springboot.dtf.records.DriveRecord;
 import com.lsb.springboot.logic.DriveList;
 import com.lsb.springboot.logic.LoginVerification;
 
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 
@@ -38,33 +40,35 @@ public class MVC
 				this.driveL = driveL;
 			}
 		
+		// code to show login page.
 		@GetMapping("/login")
 		public String ShowLoginPage(Model model)
 		{
-			return "Login";
+			return "login";
 		}
 		
+		//code to take input from login page verify it then redirect user to main page
 		@PostMapping("/login")
-		public String ShowMainPage(ModelMap model, @RequestParam String username, @RequestParam String password)
+		public String ShowLoginPage(ModelMap model, HttpServletResponse response, @RequestParam String username, @RequestParam String password) throws IOException
 		{
 			boolean isValidUser = lVeri.verifyUserPass(username, password);
 			
 			if (!isValidUser)
 				{
 					model.put("errorMessage","Invalid Credentials");
-					return "Login";
+					return "login";
 				}
 			
 			else
 				{
-					model.put("username", username);
-					model.put("password", password);
-					return "page";
+					response.sendRedirect("/dtf/availiable/drives/paths");
+					return null;
 				}
 			
 			
 		}
 		
+		// returns list of drive paths on host computer
 		public static String DriveSelector(int selectedDrive)
 			{
 				// creates an empty array of type file called paths
@@ -76,13 +80,20 @@ public class MVC
 				//returns string of drive path based on user input i.e select a number
 				return paths[selectedDrive].toString();
 			}
+		
+		
+		public String showMainPage(Model model)
+		{
+			
+			return null;
+		}
 			
 			// gets a list of all drive paths on the host computer
 			@GetMapping("/availiable/drives/paths")
 			public String ListDrivePaths(Model model)
 				{	// gets list of drive paths and returns them as a string.	
 					model.addAttribute("availiableDrives", Arrays.toString(File.listRoots()));
-					return "page";
+					return "mainPage";
 				}
 			
 			// gets a list of all drives currently added to the list along with relevant info
@@ -90,9 +101,10 @@ public class MVC
 			public String ListAddedDrives(Model model)
 			{	
 				model.addAttribute("addedDrives",driveL.PrintListOfDrives());
-				return "page";
+				return "mainPage";
 			}
 			
+			// adds a drive object to the drive list to begin tracking drive usage and predicting days till full.
 			@ResponseStatus(HttpStatus.CREATED)
 			@GetMapping("/{selectedDrive}/{nameInput}")
 			public void AddDrive(@Valid @PathVariable int selectedDrive, @Valid @PathVariable String nameInput)
