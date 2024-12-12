@@ -31,6 +31,7 @@ import jakarta.validation.constraints.NotNull;
 public class MVC
 	{
 		private final DriveList driveL;
+		boolean isValidUser;
 		
 		@Autowired
 		LoginVerification lVeri;
@@ -51,7 +52,7 @@ public class MVC
 		@PostMapping("/login")
 		public String ShowLoginPage(ModelMap model, HttpServletResponse response, @RequestParam String username, @RequestParam String password) throws IOException
 		{
-			boolean isValidUser = lVeri.verifyUserPass(username, password);
+			isValidUser = lVeri.verifyUserPass(username, password);
 			
 			if (!isValidUser)
 				{
@@ -61,7 +62,8 @@ public class MVC
 			
 			else
 				{
-					response.sendRedirect("/dtf/availiable/drives/paths");
+					response.sendRedirect("/dtf/mainPage");
+					//return "mainPage";
 					return null;
 				}
 			
@@ -81,13 +83,61 @@ public class MVC
 				return paths[selectedDrive].toString();
 			}
 		
-		
-		public String showMainPage(Model model)
+		// gets a list of all drives currently added to the list along with relevant info
+		@GetMapping("/mainPage")
+		public String showMainPage(Model model, HttpServletResponse response) throws IOException
 		{
-			
-			return null;
+			// Check to make sure password and username have been entered correctly
+			if (isValidUser)
+				{
+					if(driveL.PrintListOfDrives() == null)
+						{
+							model.addAttribute("addedDrives","There are no drives added yet");
+							return "mainPage";
+						}
+					else
+						{
+							model.addAttribute("addedDrives",driveL.PrintListOfDrives());
+							return "mainPage";
+						}
+				}
+			else
+				{
+					response.sendRedirect("/dtf/login");
+					return null;
+				}
 		}
+		
+		@PostMapping("/mainPage")
+		public String showMainPage(ModelMap model, HttpServletResponse response, @RequestParam String buttonClicked) throws IOException
+		{	
+			if(isValidUser)
+				{
+					// performs an action based on what value a particular button was assigned
+					if(buttonClicked.equals("addDrive"))
+						{
+							response.sendRedirect("/dtf/add/drive");
+							return null;
+						}
+					else if(buttonClicked.equals("logOut"))
+						{
+							isValidUser=false;
+							response.sendRedirect("/dtf/login");
+							return null;
+						}
+					else
+						{
+							return null;
+						}
+				}
+			else
+				{
+					response.sendRedirect("/dtf/login");
+					return null;
+				}
 			
+		}
+					
 			// gets a list of all drive paths on the host computer
 			@GetMapping("/availiable/drives/paths")
 			public String ListDrivePaths(Model model)
@@ -96,18 +146,18 @@ public class MVC
 					return "mainPage";
 				}
 			
-			// gets a list of all drives currently added to the list along with relevant info
-			@GetMapping("/all/drives")
-			public String ListAddedDrives(Model model)
-			{	
-				model.addAttribute("addedDrives",driveL.PrintListOfDrives());
-				return "mainPage";
+			// code to show add drive page.
+			@GetMapping("/add/drive")
+			public String ShowAddDrivePage(Model model)
+			{
+				model.addAttribute("availiableDrives", Arrays.toString(File.listRoots()));
+				return "addDrive";
 			}
 			
 			// adds a drive object to the drive list to begin tracking drive usage and predicting days till full.
 			@ResponseStatus(HttpStatus.CREATED)
-			@GetMapping("/{selectedDrive}/{nameInput}")
-			public void AddDrive(@Valid @PathVariable int selectedDrive, @Valid @PathVariable String nameInput)
+			@PostMapping("/add/drive")
+			public String AddDrive(ModelMap model, HttpServletResponse response, @RequestParam int selectedDrive, @RequestParam String nameInput) throws IOException
 				{
 					
 									int driveNumber = selectedDrive;
@@ -116,6 +166,9 @@ public class MVC
 									String driveName;
 									driveName = nameInput;
 									driveL.CreateNewDrive(driveName, filePath);
+									
+									response.sendRedirect("/dtf/mainPage");
+									return null;
 				}
 			/*
 			public static void Quit(Scanner aYSure, int option)

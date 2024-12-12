@@ -7,7 +7,10 @@
 <title>DTF</title>
 </head>
 <body>
-	<h2>${availiableDrives}</h2>
 	<h3>${addedDrives}</h3>
+	<form class="button" method="post">
+		<button type="submit" name="buttonClicked" value="addDrive">Add Drive</button>
+		<button type="submit" name="buttonClicked" value="logOut">Log Out</button>
+	</form>
 </body>
 </html>
